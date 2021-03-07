@@ -84,7 +84,7 @@ class Book extends Model
     public function discountedPrice()
     {
         if($this->discount){
-            return $this->price * (1 - ($this->discount / 100));
+            return number_format($this->price * (1 - ($this->discount / 100)), 2, '.', '');
         }
 
         return $this->price;

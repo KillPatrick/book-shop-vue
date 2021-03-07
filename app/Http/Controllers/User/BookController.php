@@ -54,6 +54,8 @@ class BookController extends Controller
                     ->latest()
                     ->paginate(25);
 
+
+
         return view('book.index', compact('books'));
     }
 

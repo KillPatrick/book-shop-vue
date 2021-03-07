@@ -13,7 +13,8 @@ class BookController extends Controller
     {
         $books = Book::with('genres')
                 ->with('authors')
-                ->whereNotNull('is_approved')->get();
+                ->whereNotNull('is_approved')
+                ->paginate(18);
 
         return BookResource::collection($books);
     }

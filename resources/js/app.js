@@ -5,8 +5,13 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-Vue.component('index-index', require('./components/Books/Index.vue').default)
+import routes from './routes'
+import App from './components/App.vue'
+
+Vue.component('pagination', require('laravel-vue-pagination'))
 
 const app = new Vue({
-    el : '#app'
+    el : '#app',
+    components: { App },
+    router: new VueRouter(routes)
 });

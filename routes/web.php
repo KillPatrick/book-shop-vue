@@ -16,7 +16,7 @@ use App\Http\Controllers\User\BookController;
 |
 */
 
-Route::get('/', [App\Http\Controllers\Guest\BookController::class, 'index']);
+Route::view('/{any}', 'welcome')->where('any', '.*');
 
 Route::group(['prefix' => 'guest', 'as' => 'guest.'], function(){
     Route::resource('books', Guest\BookController::class);
