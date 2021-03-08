@@ -9,9 +9,12 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('genres')
+        $books = Book::when(isset($request->search), function ($query) use ($request){
+                    $query->where('title', 'like', '%'.$request->search.'%');
+                })
+                ->with('genres')
                 ->with('authors')
                 ->whereNotNull('is_approved')
                 ->paginate(18);

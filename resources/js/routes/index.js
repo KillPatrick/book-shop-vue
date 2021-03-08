@@ -1,5 +1,6 @@
 import booksIndex from '../components/Books/Index.vue'
-import bookIndex from '../components/Books/Book.vue'
+import booksShow from '../components/Books/Book.vue'
+import booksSearch from '../components/Books/Search.vue'
 
 export default {
     mode: 'history',
@@ -10,13 +11,13 @@ export default {
             name: 'books.index'
         },
         {
-            path: '/search',
-            component: booksIndex,
+            path: '/search/:searchString',
+            component: booksSearch,
             name: 'books.search'
         },
         {
             path: '/books/:book_id',
-            component: bookIndex,
+            component: booksShow,
             name: 'books.show'
         }
     ]

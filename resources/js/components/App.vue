@@ -1,16 +1,15 @@
 <template>
     <div>
         <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">Book-shop</a>
-                <form class="form-inline my-2 my-lg-0" method="GET" action="/">
-                    <input class="form-control mr-sm-2" v-model.lazy="search" type="search" placeholder="Title, description, author, genre" name="search">
-                </form>
-                <a class="navbar-brand" href="#">Not approved</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <a class="navbar-brand" href="/">Book-shop</a>
+            <div class="form-inline">
+                <input class="form-control mr-2" v-model="searchString" type="search" placeholder="Title, description, author, genre" name="search">
+                <router-link v-if="searchString" :to="{name: 'books.search', params: {searchString: searchString}}" class="form-control btn btn-primary">Search</router-link>
             </div>
+            <a class="navbar-brand" href="#">Not approved</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </nav>
         <main class="py-4">
             <router-view></router-view>
@@ -21,10 +20,10 @@
 export default{
     data(){
         return {
-            search: null
+            searchString: ''
         }
     },
-    watch: {
+    /*watch: {
         search(after, before){
             this.fetch();
         }
@@ -33,6 +32,6 @@ export default{
         fetch(){
             this.$router.push({name: 'books.search', params: { search: this.search }});
         }
-    }
+    }*/
 }
 </script>
