@@ -44,10 +44,14 @@ export default {
     data(){
         return {
             book: [],
-            reviews: []
+            reviews: [],
+            userReview: '',
         }
     },
     created() {
+        axios.get('/sanctum/csrf-cookie').then(response => {
+            this.getUserReview();
+        });
         this.getBook();
         this.getReviews();
     },
@@ -60,6 +64,12 @@ export default {
         getReviews(){
             axios.get('/api/v1/reviews?book_id='+this.$route.params.book_id).then(response => {
                 this.reviews = response.data.data;
+            });
+        },
+        getUserReview(){
+            axios.get('/api/v1/user_review?book_id='+this.$route.params.book_id).then(response => {
+                this.userReview = response.data.data;
+                console.log(this.userReview);
             });
         }
     }

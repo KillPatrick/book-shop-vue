@@ -6,13 +6,14 @@
                 <input class="form-control mr-2" v-model="searchString" type="search" placeholder="Title, description, author, genre" name="search">
                 <router-link v-if="searchString" :to="{name: 'books.search', params: {searchString: searchString}}" class="form-control btn btn-primary">Search</router-link>
             </div>
-            <a class="navbar-brand" href="#">Not approved</a>
+            <router-link v-if="auth === 'logged out'" :to="{ name: 'auth.login' }" class="navbar-brand" >Login</router-link>
+            <router-link v-if="auth === 'logged in'" :to="{ name: 'auth.logout' }" class="navbar-brand" >Logout</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </nav>
         <main class="py-4">
-            <router-view></router-view>
+            <router-view @authCheck="checkAuth"></router-view>
         </main>
     </div>
 </template>
@@ -20,18 +21,21 @@
 export default{
     data(){
         return {
+            auth: '',
             searchString: ''
         }
     },
-    /*watch: {
-        search(after, before){
-            this.fetch();
-        }
+    created(){
+        this.checkAuth();
     },
     methods: {
-        fetch(){
-            this.$router.push({name: 'books.search', params: { search: this.search }});
+        checkAuth(){
+            axios.get('/api/v1/athenticated').then(()=>{
+                this.auth = 'logged in';
+            }).catch(()=>{
+                this.auth = 'logged out';
+            })
         }
-    }*/
+    }
 }
 </script>

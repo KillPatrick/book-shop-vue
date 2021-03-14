@@ -21,8 +21,12 @@ class ReviewController
         return ReviewResource::collection($reviews);
     }
 
-    public function show(Review $review)
+    public function userReview(Request $request)
     {
+        $review = Review::where('book_id', $request->book_id)
+                ->where('user_id', auth()->user()->id)
+                ->first();
 
+        return new ReviewResource($review);
     }
 }
