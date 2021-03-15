@@ -3,6 +3,11 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <books-item :book="book"></books-item>
+                <div v-if="auth" class="btn-toolbar">
+                    <div class="btn-group mr-1">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">Write a review</button>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
                 <h5 class="mb-2">Description</h5>
@@ -33,6 +38,42 @@
                 </div>
             </div>
         </div>
+        <div v-if="auth" class="modal" id="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Write a review</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="rating">Rating</label>
+                            <select name="rating" class="form-control" id="rating" required>
+                                <option v-for="n in 10" :value="n" :selected="selected == n">
+                                    {{n}} - <span v-for="j in n">&#9733</span>
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input v-if="userReview.review" type="text" name="title" class="form-control" id="title" :value="userReview.review" required>
+                            <input v-else type="text" name="title" class="form-control" id="title" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="review">Review</label>
+                            <textarea v-if="userReview.review" class="form-control" name="review" id="review" rows="5" required>{{userReview.review}}</textarea>
+                            <textarea v-else class="form-control" name="review" id="review" rows="5" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -43,15 +84,20 @@ export default {
     },
     data(){
         return {
+            auth: false,
+            selected: '10',
             book: [],
             reviews: [],
             userReview: '',
         }
     },
     created() {
-        axios.get('/sanctum/csrf-cookie').then(response => {
+        axios.get('/api/v1/athenticated').then(()=>{
             this.getUserReview();
-        });
+            this.auth = true;
+        }).catch(()=>{
+            null;
+        })
         this.getBook();
         this.getReviews();
     },
@@ -69,7 +115,9 @@ export default {
         getUserReview(){
             axios.get('/api/v1/user_review?book_id='+this.$route.params.book_id).then(response => {
                 this.userReview = response.data.data;
-                console.log(this.userReview);
+                this.selected = this.userReview.rating;
+            }).catch(()=>{
+                null;
             });
         }
     }

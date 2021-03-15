@@ -26,6 +26,9 @@ class ReviewController
         $review = Review::where('book_id', $request->book_id)
                 ->where('user_id', auth()->user()->id)
                 ->first();
+        if(!$review){
+            abort('404');
+        }
 
         return new ReviewResource($review);
     }

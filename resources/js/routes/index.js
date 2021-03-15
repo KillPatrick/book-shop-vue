@@ -4,10 +4,17 @@ import booksSearch from '../components/Books/Search.vue'
 import authLogin from '../components/Auth/Login.vue'
 import authLogout from '../components/Auth/Logout.vue'
 import authRegister from '../components/Auth/Register.vue'
+import notFound from '../components/Errors/NotFound.vue'
+
 
 export default {
     mode: 'history',
     routes: [
+        {
+            path: '*',
+            component: notFound,
+            name: 'not_found'
+        },
         {
             path: '/',
             component: booksIndex,
