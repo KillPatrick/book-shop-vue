@@ -50,7 +50,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="rating">Rating</label>
-                            <select name="rating" class="form-control" id="rating" required>
+                            <select v-model="userReview.rating" name="rating" class="form-control" id="rating" required>
                                 <option v-for="n in 10" :value="n" :selected="selected == n">
                                     {{n}} - <span v-for="j in n">&#9733</span>
                                 </option>
@@ -58,17 +58,15 @@
                         </div>
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input v-if="userReview.review" type="text" name="title" class="form-control" id="title" :value="userReview.review" required>
-                            <input v-else type="text" name="title" class="form-control" id="title" value="" required>
+                            <input v-model="userReview.title" type="text" name="title" class="form-control" id="title" required>
                         </div>
                         <div class="form-group">
                             <label for="review">Review</label>
-                            <textarea v-if="userReview.review" class="form-control" name="review" id="review" rows="5" required>{{userReview.review}}</textarea>
-                            <textarea v-else class="form-control" name="review" id="review" rows="5" required></textarea>
+                            <textarea v-model="userReview.review" class="form-control" name="review" id="review" rows="5" required>{{userReview.review}}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button @click.prevent="saveReview" type="button" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -88,7 +86,12 @@ export default {
             selected: '10',
             book: [],
             reviews: [],
-            userReview: '',
+            userReview: {
+                rating: '',
+                title: '',
+                review: '',
+                book_id: '',
+            },
         }
     },
     created() {
@@ -105,6 +108,9 @@ export default {
         getBook(){
             axios.get('/api/v1/books/'+this.$route.params.book_id).then(response => {
                 this.book = response.data.data;
+                if(!this.userReview.book_id){
+                    this.userReview.book_id = this.book.id;
+                }
             });
         },
         getReviews(){
@@ -119,6 +125,25 @@ export default {
             }).catch(()=>{
                 null;
             });
+        },
+        saveReview(){
+            if(this.userReview.id){
+                axios.post('/api/v1/review/update/'+this.userReview.id, this.userReview).then(response => {
+                    this.getBook();
+                    this.getReviews();
+                    $('#modal').modal('hide');
+                }).catch(() => {
+                    null;
+                });
+            } else {
+                axios.post('/api/v1/review/store', this.userReview).then(response => {
+                    this.getBook();
+                    this.getReviews();
+                    $('#modal').modal('hide');
+                }).catch(() => {
+                    null;
+                });
+            }
         }
     }
 }
