@@ -7,6 +7,7 @@
                 <router-link v-if="searchString" :to="{name: 'books.search', params: {searchString: searchString}}" class="form-control btn btn-primary">Search</router-link>
             </div>
             <router-link v-if="auth === 'logged out'" :to="{ name: 'auth.login' }" class="navbar-brand" >Login</router-link>
+            <router-link v-if="auth === 'logged out'" :to="{ name: 'auth.register' }" class="navbar-brand" >Register</router-link>
             <router-link v-if="auth === 'logged in'" :to="{ name: 'auth.logout' }" class="navbar-brand" >Logout</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="">
                 <span class="navbar-toggler-icon"></span>

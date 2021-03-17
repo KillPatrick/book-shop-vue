@@ -50,7 +50,14 @@ export default {
         {
             path: '/register',
             component: authRegister,
-            name: 'auth.register'
+            name: 'auth.register',
+            beforeEnter: (to, form, next) =>{
+                axios.get('/api/v1/athenticated').then(()=>{
+                    return next({ name: 'books.index'})
+                }).catch(()=>{
+                    next()
+                })
+            }
         }
     ]
 }
