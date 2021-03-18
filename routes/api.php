@@ -17,12 +17,21 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('books', BookController::class)->only(['index', 'show']);
 Route::apiResource('reviews', ReviewController::class);
 
-Route::middleware('auth:sanctum')->get('user_review', [\App\Http\Controllers\Api\V1\ReviewController::class, 'userReview']);
-Route::middleware('auth:sanctum')->post('review/store', [\App\Http\Controllers\Api\V1\ReviewController::class, 'store']);
-Route::middleware('auth:sanctum')->post('review/update/{review}', [\App\Http\Controllers\Api\V1\ReviewController::class, 'update']);
-Route::middleware('auth:sanctum')->get('athenticated', function () {
-    return true;
+Route::middleware('auth:sanctum')->group(function(){
+    Route::get('user_review', [\App\Http\Controllers\Api\V1\ReviewController::class, 'userReview']);
+    Route::post('review/store', [\App\Http\Controllers\Api\V1\ReviewController::class, 'store']);
+    Route::post('review/update/{review}', [\App\Http\Controllers\Api\V1\ReviewController::class, 'update']);
+    Route::get('athenticated', function () {
+        return true;
+    });
+    Route::get('user', [\App\Http\Controllers\Api\V1\UserController::class, 'index']);
+    Route::group(['middleware' => 'auth.accessAdmin'], function(){
+        Route::group(['prefix' => 'admin', 'as' => 'admin.'], function(){
+            Route::apiResource('books', \Admin\BookController::class);
+        });
+    });
 });
+
 Route::post('login', [\App\Http\Controllers\Api\V1\LoginController::class, 'login']);
 Route::post('logout', [\App\Http\Controllers\Api\V1\LoginController::class, 'logout']);
 Route::post('register', [\App\Http\Controllers\Api\V1\RegisterController::class, 'register']);

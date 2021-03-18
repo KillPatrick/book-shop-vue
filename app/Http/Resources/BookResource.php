@@ -24,7 +24,8 @@ class BookResource extends JsonResource
             'genres' => $this->genres->pluck('name')->implode(', '),
             'authors' => $this->authors->pluck('name')->implode(', '),
             'rating' => $this->reviewsRating(),
-            'new' => $this->new()
+            'new' => $this->new(),
+            'is_approved' => $this->is_approved,
         ];
     }
 }

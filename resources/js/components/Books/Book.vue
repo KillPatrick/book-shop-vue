@@ -101,12 +101,37 @@ export default {
         }).catch(()=>{
             null;
         })
-        this.getBook();
+        this.init();
         this.getReviews();
     },
     methods:{
+        init(){
+            axios.get('/api/v1/athenticated').then(()=>{
+                axios.get('/api/v1/user').then((response)=>{
+                    this.user = response.data.data;
+                    console.log(this.user);
+                    if(this.user.admin){
+                        this.getAdminBook();
+                    } else {
+                        this.getBook();
+                    }
+                }).catch(()=>{
+                    this.getBook();
+                });
+            }).catch(()=>{
+                this.getBook();
+            })
+        },
         getBook(){
             axios.get('/api/v1/books/'+this.$route.params.book_id).then(response => {
+                this.book = response.data.data;
+                if(!this.userReview.book_id){
+                    this.userReview.book_id = this.book.id;
+                }
+            });
+        },
+        getAdminBook(){
+            axios.get('/api/v1/admin/books/'+this.$route.params.book_id).then(response => {
                 this.book = response.data.data;
                 if(!this.userReview.book_id){
                     this.userReview.book_id = this.book.id;

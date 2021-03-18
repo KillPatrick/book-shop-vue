@@ -2,12 +2,13 @@
     <div>
         <div class="card shadow-sm bg-white rounded-lg">
             <h4 class="sticky-top position-absolute ml-2 mt-1">
-                <span v-if="book.rating" class="badge badge-success shadow-sm">-{{ book.rating }}%</span>
+                <span v-if="book.discount" class="badge badge-success shadow-sm">-{{ book.discount }}%</span>
                 <span class="badge badge-secondary shadow-sm">{{ book.price }} &euro;</span>
                 <span v-if="book.new" class="badge badge-warning shadow-sm">New</span>
+                <span v-if="book.is_approved === null" class="badge badge-danger shadow-sm">Not approved</span>
             </h4>
             <router-link v-if="book.id" :to="{ name: 'books.show', params: { book_id: book.id } }">
-                <img class="mx-auto pt-5" v-bind:src="'/' + book.image" :title="book.title" width="50%" />
+                <img class="mx-auto pt-5 pl-3" v-bind:src="'/' + book.image" :title="book.title" width="50%" />
             </router-link>
 
             <div class="card-body p-2">

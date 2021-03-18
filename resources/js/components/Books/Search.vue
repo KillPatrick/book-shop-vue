@@ -22,7 +22,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$route.params.searchString);
         this.getResults();
     },
     methods: {
