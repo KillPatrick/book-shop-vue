@@ -3,7 +3,7 @@
         <div class="card shadow-sm bg-white rounded-lg">
             <h4 class="sticky-top position-absolute ml-2 mt-1">
                 <span v-if="book.discount" class="badge badge-success shadow-sm">-{{ book.discount }}%</span>
-                <span class="badge badge-secondary shadow-sm">{{ book.price }} &euro;</span>
+                <span class="badge badge-secondary shadow-sm">{{ book.discounted_price }} &euro;</span>
                 <span v-if="book.new" class="badge badge-warning shadow-sm">New</span>
                 <span v-if="book.is_approved === null" class="badge badge-danger shadow-sm">Not approved</span>
             </h4>

@@ -1,10 +1,12 @@
 import booksIndex from '../components/Books/Index.vue'
 import booksShow from '../components/Books/Book.vue'
 import booksSearch from '../components/Books/Search.vue'
+import booksEdit from '../components/Books/Edit.vue'
 import authLogin from '../components/Auth/Login.vue'
 import authLogout from '../components/Auth/Logout.vue'
 import authRegister from '../components/Auth/Register.vue'
 import notFound from '../components/Errors/NotFound.vue'
+
 
 
 export default {
@@ -29,6 +31,30 @@ export default {
             path: '/books/:book_id',
             component: booksShow,
             name: 'books.show',
+        },
+        {
+            path: '/create',
+            component: booksEdit,
+            name: 'books.create',
+            beforeEnter: (to, form, next) =>{
+                axios.get('/api/v1/athenticated').then(()=>{
+                    next()
+                }).catch(()=>{
+                    return next({ name: 'books.index'})
+                })
+            }
+        },
+        {
+            path: '/edit/:book_id',
+            component: booksEdit,
+            name: 'books.edit',
+            beforeEnter: (to, form, next) =>{
+                axios.get('/api/v1/athenticated').then(()=>{
+                    return next({ name: 'books.index'})
+                }).catch(()=>{
+                    next()
+                })
+            }
         },
         {
             path: '/login',

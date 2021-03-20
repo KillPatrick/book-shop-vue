@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 
 class Book extends Model
 {
@@ -94,11 +95,11 @@ class Book extends Model
      * @param $request
      * @return Book
      */
-    static public function createBookWithAuthorsGenres($request)
+    static public function createBookWithAuthorsGenres(Request $request)
     {
-        $book = auth()->user()->books()->create($request);
-        $book->genres()->attach($request['genres']);
-        $authors = explode(',', $request['authors']);
+        $book = auth()->user()->books()->create($request->all());
+        $book->genres()->attach(array_column($request->genres, 'id'));
+        $authors = explode(',', $request->authors);
 
         foreach($authors as $authorName){
             $author = Author::updateOrCreate(['name' => $authorName]);

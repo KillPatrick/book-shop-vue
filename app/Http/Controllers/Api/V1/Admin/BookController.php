@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
 use Illuminate\Http\Request;
 use App\Models\Book;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class BookController extends Controller
 {
@@ -24,5 +25,14 @@ class BookController extends Controller
     public function show(Book $book)
     {
         return new BookResource($book);
+    }
+
+    public function store(Request $request)
+    {
+        $book = Book::createBookWithAuthorsGenres($request);
+
+        $book->is_approved = 1;
+
+        $book->save();
     }
 }

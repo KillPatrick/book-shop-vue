@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('books', BookController::class)->only(['index', 'show']);
 Route::apiResource('reviews', ReviewController::class);
+Route::apiResource('genres', GenreController::class)->only(['index']);
+
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('user_review', [\App\Http\Controllers\Api\V1\ReviewController::class, 'userReview']);

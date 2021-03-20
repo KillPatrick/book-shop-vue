@@ -109,18 +109,13 @@ export default {
             axios.get('/api/v1/athenticated').then(()=>{
                 axios.get('/api/v1/user').then((response)=>{
                     this.user = response.data.data;
-                    console.log(this.user);
                     if(this.user.admin){
                         this.getAdminBook();
-                    } else {
-                        this.getBook();
+                        return;
                     }
-                }).catch(()=>{
-                    this.getBook();
                 });
-            }).catch(()=>{
-                this.getBook();
-            })
+            });
+            this.getBook();
         },
         getBook(){
             axios.get('/api/v1/books/'+this.$route.params.book_id).then(response => {
