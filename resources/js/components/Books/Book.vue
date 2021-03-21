@@ -3,9 +3,12 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <books-item :book="book"></books-item>
-                <div v-if="auth" class="btn-toolbar">
+                <div v-if="auth" class="btn-toolbar mt-1">
                     <div class="btn-group mr-1">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">Write a review</button>
+                    </div>
+                    <div v-if="editBook" class="btn-group mr-1">
+                        <router-link :to="{ name: 'books.edit', params: {book_id: book.id} }" class="btn btn-primary" >Edit book</router-link>
                     </div>
                 </div>
             </div>
@@ -92,6 +95,7 @@ export default {
                 review: '',
                 book_id: '',
             },
+            editBook: false
         }
     },
     created() {
@@ -111,6 +115,7 @@ export default {
                     this.user = response.data.data;
                     if(this.user.admin){
                         this.getAdminBook();
+                        this.editBook = true;
                         return;
                     }
                 });

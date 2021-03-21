@@ -7,8 +7,6 @@ import authLogout from '../components/Auth/Logout.vue'
 import authRegister from '../components/Auth/Register.vue'
 import notFound from '../components/Errors/NotFound.vue'
 
-
-
 export default {
     mode: 'history',
     routes: [
@@ -50,9 +48,9 @@ export default {
             name: 'books.edit',
             beforeEnter: (to, form, next) =>{
                 axios.get('/api/v1/athenticated').then(()=>{
-                    return next({ name: 'books.index'})
-                }).catch(()=>{
                     next()
+                }).catch(()=>{
+                    return next({ name: 'books.index'})
                 })
             }
         },

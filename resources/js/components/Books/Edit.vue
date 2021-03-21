@@ -60,7 +60,8 @@
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
-                        <button @click.prevent="saveBook" type="submit" class="btn btn-primary">Submit</button>
+                        <button v-if="book.id" @click.prevent="updateBook" type="submit" class="btn btn-primary">Update</button>
+                        <button v-else="" @click.prevent="saveBook" type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -72,6 +73,7 @@
         data(){
             return {
                 book: {
+                    id: '',
                     title: '',
                     description: '',
                     price: '',
@@ -85,12 +87,14 @@
         },
         created(){
             this.getGenres();
+            if(this.$route.params.book_id){
+                this.getBook();
+            }
         },
         methods:{
             getGenres(){
-                axios.get('api/v1/genres').then(response => {
+                axios.get('/api/v1/genres').then(response => {
                     this.genres = response.data.data;
-                    console.log(this.genres);
                 });
             },
             saveBook(){
@@ -99,14 +103,33 @@
                         this.user = response.data.data;
                         if (this.user.admin) {
                             axios.post('/api/v1/admin/books', this.book).then((response) => {
-                                console.log('done');
+                                null;
                             }).catch(error => {
                                 this.errors = error.response.data.errors;
                             });
                         }
                     });
                 });
-            }
+            },
+            updateBook(){
+                axios.get('/api/v1/athenticated').then(()=> {
+                    axios.get('/api/v1/user').then((response) => {
+                        this.user = response.data.data;
+                        if (this.user.admin) {
+                            axios.put('/api/v1/admin/books/'+this.book.id, this.book).then((response) => {
+                                null;
+                            }).catch(error => {
+                                this.errors = error.response.data.errors;
+                            });
+                        }
+                    });
+                });
+            },
+            getBook(){
+                axios.get('/api/v1/books/'+this.$route.params.book_id+'?editing').then(response => {
+                    this.book = response.data.data;
+                });
+            },
         }
     }
 </script>
