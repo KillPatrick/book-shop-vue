@@ -98,7 +98,7 @@ class Book extends Model
     static public function createBookWithAuthorsGenres(Request $request)
     {
         $book = auth()->user()->books()->create($request->all());
-        $book->genres()->attach(array_column($request->genres, 'id'));
+        $book->genres()->attach($request->genres);
         $authors = explode(',', $request->authors);
 
         foreach($authors as $authorName){

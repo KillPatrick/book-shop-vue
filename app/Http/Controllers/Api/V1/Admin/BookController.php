@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBookRequest;
 use App\Http\Resources\BookResource;
 use Illuminate\Http\Request;
 use App\Models\Book;
@@ -17,6 +18,7 @@ class BookController extends Controller
                 })
                 ->with('genres')
                 ->with('authors')
+                ->orderBy('created_at', 'desc')
                 ->paginate(18);
 
         return BookResource::collection($books);
@@ -27,7 +29,7 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function store(Request $request)
+    public function store(StoreBookRequest $request)
     {
         $book = Book::createBookWithAuthorsGenres($request);
 
