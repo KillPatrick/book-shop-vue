@@ -31,30 +31,45 @@
                     discount: '',
                 },
                 errors: [],
+                updateUrl: '',
+                getBookUrl: '',
+                user: []
             }
         },
-        created(){
-            this.getBook();
+        beforeMount(){
+            this.init();
         },
         methods:{
-            updateBook(){
-                axios.get('/api/v1/athenticated').then(()=> {
-                    axios.get('/api/v1/user').then((response) => {
-                        this.user = response.data.data;
-                        if (this.user.admin) {
-                            axios.put('/api/v1/admin/books/'+this.book.id, this.book).then((response) => {
-                                null;
-                            }).catch(error => {
-                                this.errors = error.response.data.errors;
-                            });
-                        }
-                    });
+            async init(){
+                axios.get('/api/v1/user').then((response) => {
+                    this.user = response.data.data;
+                    console.log(this.user.admin);
                 });
-            },
-            getBook(){
-                axios.get('/api/v1/books/'+this.$route.params.book_id+'?editing').then(response => {
+                if (this.user.admin === true) {
+                    this.getBookUrl = '/api/v1/admin/books/';
+                } else {
+                    axios.get('/api/v1/user/owner/' + this.$route.params.book_id).then((response) => {
+                        this.getBookUrl = '/api/v1/user/books/';
+                    }).catch(() => {
+                        this.$router.push({name: 'books.index'});
+                    });
+                }
+                await axios.get(this.getBookUrl+this.$route.params.book_id+'?editing').then(response => {
                     this.book = response.data.data;
                 });
+            },
+            updateBook(){
+                if (this.user.admin === true) {
+                    this.updateUrl = '/api/v1/admin/books/';
+                } else {
+                    this.updateUrl = '/api/v1/user/books/';
+                }
+                axios.put(this.updateUrl+this.book.id, this.book).then((response) => {
+                    this.$router.push({name: 'books.index'});
+                }).catch(error => {
+                    this.errors = error.response.data.errors;
+                });
+
             },
         }
     }

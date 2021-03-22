@@ -32,6 +32,10 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::apiResource('books', \Admin\BookController::class);
         });
     });
+    Route::group(['prefix' => 'user', 'as' => 'user.'], function(){
+        Route::apiResource('books', \User\BookController::class);
+        Route::get('owner/{book_id}', [\App\Http\Controllers\Api\V1\User\BookController::class, 'checkOwner']);
+    });
 });
 
 Route::post('login', [\App\Http\Controllers\Api\V1\LoginController::class, 'login']);

@@ -117,6 +117,12 @@
                             this.getAdminBook();
                             this.editBook = true;
                             return;
+                        } else {
+                            this.getBook();
+                            axios.get('/api/v1/user/owner/'+this.book.id).then((response)=>{
+                                this.editBook = true;
+                            });
+                            return;
                         }
                     });
                 });

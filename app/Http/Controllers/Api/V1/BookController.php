@@ -17,6 +17,7 @@ class BookController extends Controller
                 ->with('genres')
                 ->with('authors')
                 ->whereNotNull('is_approved')
+                ->orderBy('created_at', 'desc')
                 ->paginate(18);
 
         return BookResource::collection($books);

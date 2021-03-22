@@ -31,6 +31,7 @@
                 },
                 genres: [],
                 errors: [],
+                insertUrl: '',
             }
         },
         methods:{
@@ -39,12 +40,15 @@
                     axios.get('/api/v1/user').then((response) => {
                         this.user = response.data.data;
                         if (this.user.admin) {
-                            axios.post('/api/v1/admin/books', this.book).then((response) => {
-                                null;
-                            }).catch(error => {
-                                this.errors = error.response.data.errors;
-                            });
+                            this.insertUrl = '/api/v1/admin/books/';
+                        } else {
+                            this.insertUrl = '/api/v1/user/books/';
                         }
+                        axios.post(this.insertUrl, this.book).then((response) => {
+                            this.$router.push({name: 'books.index'});
+                        }).catch(error => {
+                            this.errors = error.response.data.errors;
+                        });
                     });
                 });
             }

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="row mb-3">
-            <div v-for="book in books" class="col-md-2">
+            <div v-for="book in books.data" class="col-md-2">
                 <books-item :book="book"></books-item>
             </div>
         </div>
@@ -19,7 +19,7 @@
         data(){
             return {
                 books: {},
-                user: {},
+                user: [],
                 page: 1
             }
         },
@@ -41,12 +41,12 @@
             },
             getResults(page = 1){
                 axios.get('/api/v1/books?page='+page).then(response => {
-                    this.books = response.data.data;
+                    this.books = response.data;
                 });
             },
             getAdminResults(page = 1){
                 axios.get('/api/v1/admin/books?page='+page).then(response => {
-                    this.books = response.data.data;
+                    this.books = response.data;
                 });
             }
         }
