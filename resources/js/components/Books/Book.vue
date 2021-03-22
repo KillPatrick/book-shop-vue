@@ -78,98 +78,98 @@
     </div>
 </template>
 <script>
-import booksItem from './BookItem'
-export default {
-    components:{
-        booksItem
-    },
-    data(){
-        return {
-            auth: false,
-            selected: '10',
-            book: [],
-            reviews: [],
-            userReview: {
-                rating: '',
-                title: '',
-                review: '',
-                book_id: '',
-            },
-            editBook: false
-        }
-    },
-    created() {
-        axios.get('/api/v1/athenticated').then(()=>{
-            this.getUserReview();
-            this.auth = true;
-        }).catch(()=>{
-            null;
-        })
-        this.init();
-        this.getReviews();
-    },
-    methods:{
-        init(){
+    import booksItem from './BookItem'
+    export default {
+        components:{
+            booksItem
+        },
+        data(){
+            return {
+                auth: false,
+                selected: '10',
+                book: [],
+                reviews: [],
+                userReview: {
+                    rating: '',
+                    title: '',
+                    review: '',
+                    book_id: '',
+                },
+                editBook: false
+            }
+        },
+        created() {
             axios.get('/api/v1/athenticated').then(()=>{
-                axios.get('/api/v1/user').then((response)=>{
-                    this.user = response.data.data;
-                    if(this.user.admin){
-                        this.getAdminBook();
-                        this.editBook = true;
-                        return;
-                    }
-                });
-            });
-            this.getBook();
-        },
-        getBook(){
-            axios.get('/api/v1/books/'+this.$route.params.book_id).then(response => {
-                this.book = response.data.data;
-                if(!this.userReview.book_id){
-                    this.userReview.book_id = this.book.id;
-                }
-            });
-        },
-        getAdminBook(){
-            axios.get('/api/v1/admin/books/'+this.$route.params.book_id).then(response => {
-                this.book = response.data.data;
-                if(!this.userReview.book_id){
-                    this.userReview.book_id = this.book.id;
-                }
-            });
-        },
-        getReviews(){
-            axios.get('/api/v1/reviews?book_id='+this.$route.params.book_id).then(response => {
-                this.reviews = response.data.data;
-            });
-        },
-        getUserReview(){
-            axios.get('/api/v1/user_review?book_id='+this.$route.params.book_id).then(response => {
-                this.userReview = response.data.data;
-                this.selected = this.userReview.rating;
+                this.getUserReview();
+                this.auth = true;
             }).catch(()=>{
                 null;
-            });
+            })
+            this.init();
+            this.getReviews();
         },
-        saveReview(){
-            if(this.userReview.id){
-                axios.post('/api/v1/review/update/'+this.userReview.id, this.userReview).then(response => {
-                    this.getBook();
-                    this.getReviews();
-                    $('#modal').modal('hide');
-                }).catch(() => {
+        methods:{
+            init(){
+                axios.get('/api/v1/athenticated').then(()=>{
+                    axios.get('/api/v1/user').then((response)=>{
+                        this.user = response.data.data;
+                        if(this.user.admin){
+                            this.getAdminBook();
+                            this.editBook = true;
+                            return;
+                        }
+                    });
+                });
+                this.getBook();
+            },
+            getBook(){
+                axios.get('/api/v1/books/'+this.$route.params.book_id).then(response => {
+                    this.book = response.data.data;
+                    if(!this.userReview.book_id){
+                        this.userReview.book_id = this.book.id;
+                    }
+                });
+            },
+            getAdminBook(){
+                axios.get('/api/v1/admin/books/'+this.$route.params.book_id).then(response => {
+                    this.book = response.data.data;
+                    if(!this.userReview.book_id){
+                        this.userReview.book_id = this.book.id;
+                    }
+                });
+            },
+            getReviews(){
+                axios.get('/api/v1/reviews?book_id='+this.$route.params.book_id).then(response => {
+                    this.reviews = response.data.data;
+                });
+            },
+            getUserReview(){
+                axios.get('/api/v1/user_review?book_id='+this.$route.params.book_id).then(response => {
+                    this.userReview = response.data.data;
+                    this.selected = this.userReview.rating;
+                }).catch(()=>{
                     null;
                 });
-            } else {
-                axios.post('/api/v1/review/store', this.userReview).then(response => {
-                    this.getBook();
-                    this.getReviews();
-                    $('#modal').modal('hide');
-                }).catch(() => {
-                    null;
-                });
+            },
+            saveReview(){
+                if(this.userReview.id){
+                    axios.post('/api/v1/review/update/'+this.userReview.id, this.userReview).then(response => {
+                        this.getBook();
+                        this.getReviews();
+                        $('#modal').modal('hide');
+                    }).catch(() => {
+                        null;
+                    });
+                } else {
+                    axios.post('/api/v1/review/store', this.userReview).then(response => {
+                        this.getBook();
+                        this.getReviews();
+                        $('#modal').modal('hide');
+                    }).catch(() => {
+                        null;
+                    });
+                }
             }
         }
     }
-}
 </script>

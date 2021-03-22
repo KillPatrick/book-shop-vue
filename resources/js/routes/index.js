@@ -1,6 +1,7 @@
 import booksIndex from '../components/Books/Index.vue'
 import booksShow from '../components/Books/Book.vue'
 import booksSearch from '../components/Books/Search.vue'
+import booksCreate from '../components/Books/Create.vue'
 import booksEdit from '../components/Books/Edit.vue'
 import authLogin from '../components/Auth/Login.vue'
 import authLogout from '../components/Auth/Logout.vue'
@@ -32,7 +33,7 @@ export default {
         },
         {
             path: '/create',
-            component: booksEdit,
+            component: booksCreate,
             name: 'books.create',
             beforeEnter: (to, form, next) =>{
                 axios.get('/api/v1/athenticated').then(()=>{

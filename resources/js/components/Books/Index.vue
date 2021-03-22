@@ -41,7 +41,7 @@
             },
             getResults(page = 1){
                 axios.get('/api/v1/books?page='+page).then(response => {
-                    this.books = response.data;
+                    this.books = response.data.data;
                 });
             },
             getAdminResults(page = 1){
