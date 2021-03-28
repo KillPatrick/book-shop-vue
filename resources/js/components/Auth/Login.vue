@@ -48,13 +48,22 @@ export default {
         }
     },
     methods: {
-        doLogin(){
-            axios.post('/api/v1/login', this.form).then(response => {
+        async doLogin(){
+            this.error = null;
+            try {
+                await this.$store.dispatch('login', this.form);
+                await this.$router.push({ name: 'books.index' });
+            } catch (error) {
+                this.error = error;
+            } finally {
+                this.loading = false;
+            }
+            /*axios.post('/api/v1/login', this.form).then(response => {
                 this.$emit('authCheck', true)
                 this.$router.push({name: 'books.index'});
             }).catch(error => {
                 this.errors = error.response.data.errors;
-            });
+            });*/
         }
     }
 }

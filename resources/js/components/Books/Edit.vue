@@ -14,6 +14,7 @@
     </div>
 </template>
 <script>
+    import repository from "../../api/repository";
     import booksForm from './Form'
     export default {
         components: {
@@ -41,14 +42,14 @@
         },
         methods:{
             async init(){
-                axios.get('/api/v1/user').then((response) => {
+                await axios.get('/api/v1/user').then((response) => {
                     this.user = response.data.data;
                     console.log(this.user.admin);
                 });
                 if (this.user.admin === true) {
                     this.getBookUrl = '/api/v1/admin/books/';
                 } else {
-                    axios.get('/api/v1/user/owner/' + this.$route.params.book_id).then((response) => {
+                    await axios.get('/api/v1/user/owner/' + this.$route.params.book_id).then((response) => {
                         this.getBookUrl = '/api/v1/user/books/';
                     }).catch(() => {
                         this.$router.push({name: 'books.index'});

@@ -25,6 +25,7 @@ class AccessNotApproved
             return $next($request);
         }
 
-        return redirect('/');
+        return response()->json(['error' => 'Unauthenticated.'], 401);
+        //return redirect('/');
     }
 }

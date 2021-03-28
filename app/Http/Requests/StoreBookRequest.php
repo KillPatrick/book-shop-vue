@@ -30,7 +30,7 @@ class StoreBookRequest extends FormRequest
             'description' => 'required|max:2000',
             'price' => 'required|numeric',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'discount' => 'integer|nullable|min:1|max:100'
+            'discount' => 'required|integer|min:0|max:100'
         ];
     }
 }

@@ -19,8 +19,10 @@ class AccessBookOwner
     {
         if(Gate::allows('is-book-owner', $request->route('book')->id)){
             return $next($request);
+        } else {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        return redirect('/');
+        //return redirect('/');
     }
 }

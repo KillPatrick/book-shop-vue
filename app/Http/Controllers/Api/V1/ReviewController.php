@@ -27,7 +27,9 @@ class ReviewController
 
     public function store(StoreReviewRequest $request)
     {
-        auth()->user()->reviews()->create($request->all());
+        $review = auth()->user()->reviews()->create($request->all());
+
+        return response()->json(['id' => $review->id], 203);
     }
 
     public function update(UpdateReviewRequest $request, Review $review)

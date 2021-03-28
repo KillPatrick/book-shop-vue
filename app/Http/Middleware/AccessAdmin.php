@@ -20,7 +20,8 @@ class AccessAdmin
         if(Gate::allows('is-admin')){
             return $next($request);
         }
-
-        return redirect('/');
+        else {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
     }
 }

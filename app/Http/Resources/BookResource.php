@@ -23,6 +23,7 @@ class BookResource extends JsonResource
                 'discount' => $this->discount,
                 'genres' => $this->genres->pluck('id'),
                 'authors' => $this->authors->pluck('name')->implode(', '),
+                'user_id' => $this->user_id
             ];
         }
         return [
@@ -38,6 +39,7 @@ class BookResource extends JsonResource
             'rating' => $this->reviewsRating(),
             'new' => $this->new(),
             'is_approved' => $this->is_approved,
+            'user_id' => $this->user_id
         ];
     }
 }

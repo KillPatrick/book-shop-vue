@@ -11,15 +11,16 @@
     </div>
 </template>
 <script>
+    import repository from "../../api/repository";
     import booksItem from './BookItem.vue'
     export default {
+        props: ['user'],
         components:{
           booksItem
         },
         data(){
             return {
                 books: {},
-                user: [],
                 page: 1
             }
         },
@@ -28,27 +29,16 @@
         },
         methods: {
             init(page = 1){
-                axios.get('/api/v1/athenticated').then(()=> {
-                    axios.get('/api/v1/user').then((response) => {
-                        this.user = response.data.data;
-                        if (this.user.admin) {
-                            this.getAdminResults(page);
-                            return;
-                        }
+                if(this.user && this.user.admin){
+                    repository.getAdminBooks(page).then(response => {
+                        this.books = response.data;
                     });
-                });
-                this.getResults(page);
+                } else {
+                    repository.getBooks(page).then(response => {
+                        this.books = response.data;
+                    });
+                }
             },
-            getResults(page = 1){
-                axios.get('/api/v1/books?page='+page).then(response => {
-                    this.books = response.data;
-                });
-            },
-            getAdminResults(page = 1){
-                axios.get('/api/v1/admin/books?page='+page).then(response => {
-                    this.books = response.data;
-                });
-            }
         }
     }
 </script>

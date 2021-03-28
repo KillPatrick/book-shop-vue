@@ -13,13 +13,9 @@ export default {
         this.doLogout();
     },
     methods: {
-        doLogout(){
-            axios.post('/api/v1/logout').then(() => {
-                this.$emit('authCheck', true);
-                this.$router.push({name: 'books.index'});
-            }).catch(()=>{
-                this.$router.push({name: 'books.index'});
-            })
+        async doLogout(){
+            await this.$store.dispatch('logout');
+            await this.$router.push({ name: 'books.index' });
         }
     }
 }

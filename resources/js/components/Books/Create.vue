@@ -15,6 +15,8 @@
 </template>
 <script>
     import booksForm from './Form'
+    import repository from "../../api/repository";
+    import {mapGetters} from "vuex";
     export default {
         components:{
             booksForm
@@ -27,30 +29,33 @@
                     price: '',
                     authors: '',
                     genres: [],
-                    discount: '',
+                    discount: 0,
                 },
                 genres: [],
                 errors: [],
                 insertUrl: '',
             }
         },
+        computed: {
+            ...mapGetters({
+                user: 'user'
+            })
+        },
         methods:{
-            saveBook(){
-                axios.get('/api/v1/athenticated').then(()=> {
-                    axios.get('/api/v1/user').then((response) => {
-                        this.user = response.data.data;
-                        if (this.user.admin) {
-                            this.insertUrl = '/api/v1/admin/books/';
-                        } else {
-                            this.insertUrl = '/api/v1/user/books/';
-                        }
-                        axios.post(this.insertUrl, this.book).then((response) => {
-                            this.$router.push({name: 'books.index'});
-                        }).catch(error => {
-                            this.errors = error.response.data.errors;
-                        });
+            saveBook() {
+                if(this.user.admin){
+                    repository.storeAdminBook(this.book).then(response => {
+                        this.$router.push({ name: 'books.index' });
+                    }).catch(error => {
+                        this.errors = error.response.data.errors;
                     });
-                });
+                } else {
+                    repository.storeBook(this.book).then(response => {
+                        this.$router.push({ name: 'books.index' });
+                    }).catch(error => {
+                        this.errors = error.response.data.errors;
+                    });
+                }
             }
         }
     }
