@@ -41,12 +41,12 @@ export default {
       return api.get('/api/v1/user_review?book_id='+bookId);
   },
 
-  getBook(bookId){
-      return api.get('/api/v1/books/'+bookId);
+  getBook(bookId, edit = false){
+      return api.get('/api/v1/books/'+bookId+(edit ? '?edit=1' : ''));
   },
 
-  getAdminBook(bookId){
-      return api.get('/api/v1/admin/books/'+bookId);
+  getAdminBook(bookId, edit = false){
+      return api.get('/api/v1/admin/books/'+bookId+(edit ? '?edit=1' : ''));
   },
 
   getReviews(bookId){
@@ -67,5 +67,13 @@ export default {
 
   getAdminSearchResults(page = 1, searchString = ''){
       return api.get('/api/v1/admin/books?page='+page+(searchString ? '&search='+searchString : ''));
-  }
+  },
+
+  updateBook(book){
+      return api.put('/api/v1/user/books/'+book.id, book);
+  },
+
+  updateAdminBook(book){
+      return api.put('/api/v1/admin/books/'+book.id, book);
+  },
 };

@@ -14,7 +14,7 @@ class BookResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($request->has('editing')){
+        if($request->has('edit')){
             return [
                 'id' => $this->id,
                 'title' => $this->title,

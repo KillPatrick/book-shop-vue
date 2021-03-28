@@ -6,7 +6,7 @@
                     <div class="card-body">
                         <h4>Edit book</h4>
                         <books-form :book="book" :errors="errors"></books-form>
-                        <button @click.prevent="updateBook" type="submit" class="btn btn-primary">Update</button>
+                        <button v-if="book" @click.prevent="updateBook" type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>
@@ -14,8 +14,9 @@
     </div>
 </template>
 <script>
-    import repository from "../../api/repository";
+    import {mapGetters} from "vuex";
     import booksForm from './Form'
+    import repository from "../../api/repository";
     export default {
         components: {
             booksForm
@@ -31,46 +32,48 @@
                     genres: [],
                     discount: '',
                 },
-                errors: [],
-                updateUrl: '',
-                getBookUrl: '',
-                user: []
+                errors: []
             }
         },
-        beforeMount(){
-            this.init();
+        computed: {
+            ...mapGetters({
+                user: 'user'
+            })
+        },
+        created(){
+            this.getBook();
+            console.log(this.user);
         },
         methods:{
-            async init(){
-                await axios.get('/api/v1/user').then((response) => {
-                    this.user = response.data.data;
-                    console.log(this.user.admin);
-                });
-                if (this.user.admin === true) {
-                    this.getBookUrl = '/api/v1/admin/books/';
+            async getBook(){
+                if(this.user && this.user.admin){
+                    repository.getAdminBook(this.$route.params.book_id, true).then(response => {
+                        this.book = response.data.data;
+                    }).catch(errors => {
+                        null;
+                    });
                 } else {
-                    await axios.get('/api/v1/user/owner/' + this.$route.params.book_id).then((response) => {
-                        this.getBookUrl = '/api/v1/user/books/';
-                    }).catch(() => {
-                        this.$router.push({name: 'books.index'});
+                    repository.getBook(this.$route.params.book_id, true).then(response => {
+                        this.book = response.data.data;
+                    }).catch(errors => {
+                        null;
                     });
                 }
-                await axios.get(this.getBookUrl+this.$route.params.book_id+'?editing').then(response => {
-                    this.book = response.data.data;
-                });
             },
             updateBook(){
-                if (this.user.admin === true) {
-                    this.updateUrl = '/api/v1/admin/books/';
+                if (this.user && this.user.admin) {
+                    repository.updateAdminBook(this.book).then((response) => {
+                        this.$router.push({name: 'books.index'});
+                    }).catch(error => {
+                        this.errors = error.response.data.errors;
+                    });
                 } else {
-                    this.updateUrl = '/api/v1/user/books/';
+                    repository.updateBook(this.book).then((response) => {
+                        this.$router.push({name: 'books.index'});
+                    }).catch(error => {
+                        this.errors = error.response.data.errors;
+                    });
                 }
-                axios.put(this.updateUrl+this.book.id, this.book).then((response) => {
-                    this.$router.push({name: 'books.index'});
-                }).catch(error => {
-                    this.errors = error.response.data.errors;
-                });
-
             },
         }
     }
