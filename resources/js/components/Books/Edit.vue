@@ -50,13 +50,13 @@
                     repository.getAdminBook(this.$route.params.book_id, true).then(response => {
                         this.book = response.data.data;
                     }).catch(errors => {
-                        null;
+                        this.$router.push({name: 'books.index'});
                     });
                 } else {
                     repository.getBook(this.$route.params.book_id, true).then(response => {
                         this.book = response.data.data;
                     }).catch(errors => {
-                        null;
+                        this.$router.push({name: 'books.index'});
                     });
                 }
             },
